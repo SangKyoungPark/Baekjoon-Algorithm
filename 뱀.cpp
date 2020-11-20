@@ -1,4 +1,5 @@
-#include <cstdio>
+#define _CRT_SECURE_NO_WARNINGS
+#include <iostream>
 #include <queue>
 using namespace std;
 
@@ -11,7 +12,7 @@ const int L[] = { 3, 2, 0, 1 }, D[] = { 2, 3, 1, 0 };
 queue<pair<int, int>> q;
 
 void solve() {
-    //¹ì ÁÂÇ¥ Å¥¿¡ »ğÀÔ
+    //Â¹Ã¬ ÃÃ‚Ã‡Â¥ Ã…Â¥Â¿Â¡ Â»Ã°Ã€Ã”
     a[0][0] = 2;
     q.push({ 0, 0 });
 
