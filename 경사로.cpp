@@ -1,37 +1,48 @@
-#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_nO_WARnInGS
 #include <iostream>
 using namespace std;
 
-int N, L, ans;
-int map[100][100];
+int n, l, res;
+int a[100][100];
 
 void slope(int i, bool c) {
     int cnt = 1;
-    for (int j = 0; j < N - 1; j++) {
-        int d = c == 1 ? map[i][j + 1] - map[i][j] : map[j + 1][i] - map[j][i];
+    for (int j = 0; j < n - 1; j++) {
+        int d; // 높이 차이 계산
+        if (c == 1) { // 가로
+            d = a[i][j + 1] - a[i][j];
+        }
+        else { // 세로
+            d = a[j + 1][i] - a[j][i];
+        }
+        
         if (d == 0) cnt++;
-        else if (d == 1 && cnt >= L) cnt = 1;
-        else if (d == -1 && cnt >= 0) cnt = -L + 1;
+        else if (d == 1 && cnt >= l) cnt = 1;
+        else if (d == -1 && cnt >= 0) cnt = -l + 1;
         else return;
     }
-    if (cnt >= 0) ans += 1;
+    if (cnt >= 0) res += 1;
 }
 
 void solve() {
-    for (int i = 0; i < N; i++) {
-        slope(i, 1);
-        slope(i, 0);
+    for (int i = 0; i < n; i++) {
+        slope(i, 1); // 가로
+        slope(i, 0); // 세로
     }
-    printf("%d\n", ans);
 }
 
 int main() {
-    scanf("%d %d", &N, &L);
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            scanf("%d", &map[i][j]);
+    // Input Data
+    scanf("%d %d", &n, &l);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &a[i][j]);
         }
     }
+    // Logic
     solve();
+
+    // Result
+    printf("%d\n", res);
     return 0;
 }
