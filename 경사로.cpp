@@ -1,4 +1,4 @@
-#define _CRT_SECURE_nO_WARnInGS
+#define _CRT_SECURE_NO_WARNINGS
 #include <iostream>
 using namespace std;
 
