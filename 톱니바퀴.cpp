@@ -2,33 +2,32 @@
 #include <iostream>
 using namespace std;
 
-int tobni[4][8];
-int k, n, d;
+int tobni[4][8]{};
+int k,n,d;
 int res;
 
-void updateTobni(int x, int d) {
-    int temp[8];
-    if (d == 1) { // 시계 (현->다음)
-        for (int i = 0; i < 8; i++) {
-            temp[(i + 1) % 8] = tobni[x][i];
-        }
-    }
-    else { // 반시계 (다음->현)
-        for (int i = 0; i < 8; i++) {
-            temp[i] = tobni[x][(i + 1)%8];
-        }
-    }
-    // copy
-    for (int i = 0; i < 8; i++) {
-        tobni[x][i] = temp[i];
-    }
+void updateTobni(int x, int dir){
+	int temp{};
+	if(dir == 1){
+		temp = tobni[x][7];
+		for(int i=6; i>=0; i--){
+			tobni[x][i+1] = tobni[x][i];
+		}
+		tobni[x][0] = temp;
+	}else{
+		temp = tobni[x][0];
+		for(int i=0; i<7; i++){
+			tobni[x][i] = tobni[x][i+1];
+		}
+		tobni[x][7] = temp;
+	}
 }
 
-void solve() {
+void rotate(){
     for(int t=0; t<k; t++){
         scanf("%d %d", &n, &d);
 
-        int direct[4] = { 0 };
+        int direct[4]{};
         direct[n-1] = d;
 
         for (int i = n-1; i < 3; i++) {
@@ -46,28 +45,20 @@ void solve() {
     }
 }
 
-int main() {
-    // input data
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 8; j++) {
-            scanf("%1d", &tobni[i][j]);
-        }
+int main(){
+	//input
+	for(int i=0; i<4; i++){
+		for(int j=0; j<8; j++){
+			scanf("%1d",&tobni[i][j]);
+		}
+	}
+	scanf("%d", &k);
+	rotate();
+
+	// result
+    for(int i=0; i<4; i++){
+        if(tobni[i][0]) res+= (1<<i);
     }
-    
-    scanf("%d", &k);
-    //logic
-    solve();
-    // calculation
-    for (int i = 0; i < 4; i++) {
-        if (tobni[i][0]) res += (1 << i);
-    }
-    // result
-    for (int i = 0; i < 4; i++) {
-        for (int j = 0; j < 8; j++) {
-            printf("%d ", tobni[i][j]);
-        }
-        printf("\n");
-    }
-    printf("%d\n", res);
-    return 0;
+	printf("%d",res);
+	return 0;
 }
