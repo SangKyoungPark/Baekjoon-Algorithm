@@ -15,7 +15,7 @@ vector <CCTV> cctv;
 int n, m;
 int map[10][10];
 int nRes;
-// ìƒì¢Œí•˜ìš°
+// »óÁÂÇÏ¿ì
 int dx[] = { 0,-1,0,1 };
 int dy[] = { -1,0,1,0 };
 
@@ -31,25 +31,25 @@ int getBlindSpot() {
 
 void updateMap(int y, int x, int dir){
 	dir %= 4;
-	if (dir == 0) {	// ìƒ
+	if (dir == 0) {	// »ó
 		for (int i = y; i + dy[dir] >= 0; i += dy[dir]) {
 			if (map[i + dy[dir]][x] == 6)	break;
 			map[i + dy[dir]][x] = 8;
 		}
 	}
-	else if (dir == 1) { // ì¢Œ
+	else if (dir == 1) { // ÁÂ
 		for (int i = x; i + dx[dir] >= 0; i += dx[dir]) {
 			if (map[y][i + dx[dir]] == 6)	break;
 			map[y][i + dx[dir]] = 8;
 		}
 	}
-	else if (dir == 2) { // í•˜
+	else if (dir == 2) { // ÇÏ
 		for (int i = y;i + dy[dir] < n; i += dy[dir]) {
 			if (map[i + dy[dir]][x] == 6)	break;
 			map[i + dy[dir]][x] = 8;
 		}
 	}
-	else if (dir == 3) { // ìš°
+	else if (dir == 3) { // ¿ì
 		for (int i = x; i + dx[dir] < m; i += dx[dir]) {
 			if (map[y][i + dx[dir]] == 6)	break;
 			map[y][i + dx[dir]] = 8;
