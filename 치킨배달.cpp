@@ -1,7 +1,6 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <cmath>
 #include <vector>
 #include <algorithm>
 using namespace std;
@@ -25,17 +24,17 @@ int hSize{};
 int sSize{};
 
 int getDistance(point h, point s) {
-	return (abs(h.y - s.y) + abs(h.x - s.x));
+	return abs(h.y - s.y) + abs(h.x - s.x);
 }
 
 void solve(int idx) {
-	if (idx > 13)	return;
+	if (idx > sSize)	return;
 	if (idx == m) {
 		int sum = 0;
 		for (int i = 0; i < hSize; i++) {
 			int data = MAX;
 			for (int j = 0; j < m; j++) {
-				data = min(data, getDistance({ home[i].y,home[i].x }, { store[s[j]].y, store[s[j]].x}));
+				data = min(data, getDistance({ home[i].y,home[i].x }, { store[s[j]].y, store[s[j]].x }));
 			}
 			sum += data;
 		}
@@ -50,18 +49,16 @@ void solve(int idx) {
 
 int main() {
 	// Input Data
-	cin >> n >> m;
+	scanf("%d %d", &n, &m);
 	for (int i = 0; i < n; i++) {
 		for (int j = 0; j < n; j++) {
-			cin >> map[i][j];
+			scanf("%d", &map[i][j]);
 			if (map[i][j] == 1) home.push_back({ i,j });
 			else if (map[i][j] == 2) store.push_back({ i,j });
 		}
 	}
 	// Init
 	nRes = MAX;
-	hSize = home.size();
-	sSize = store.size();
 
 	// Logic
 	solve(0);
