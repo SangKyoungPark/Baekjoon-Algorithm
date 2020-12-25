@@ -1,9 +1,14 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
-#define MAXSIZE 110
 using namespace std;
+
 struct FISH {
     int x, y, s, z, dir, death;
 };
+
+const int MAXSIZE = 110;
+
 FISH arr[MAXSIZE * MAXSIZE];
 int map[MAXSIZE][MAXSIZE];
 int dx[] = { 0, 0, 0, 1, -1 };
@@ -18,7 +23,7 @@ int main(void) {
         map[arr[i].y][arr[i].x] = i;
     }
     for (int t = 0; t < C; t++) {
-        for (int y = 0; y < R; y++) { // ¹°°í±â Àâ±â
+        for (int y = 0; y < R; y++) { // ë¬¼ê³ ê¸° ìž¡ê¸°
             if (map[y][t]) {
                 arr[map[y][t]].death = 1;
                 result += arr[map[y][t]].z;
@@ -28,7 +33,7 @@ int main(void) {
         }
         int tmp[MAXSIZE][MAXSIZE] = { 0 };
         for (int i = 1; i <= M; i++) {
-            if (arr[i].death) continue; // Á×Àº ¹°°í±â continue;
+            if (arr[i].death) continue; // ì£½ì€ ë¬¼ê³ ê¸° continue;
             int ix = arr[i].x;
             int iy = arr[i].y;
             int s = arr[i].s;
@@ -61,7 +66,7 @@ int main(void) {
             arr[i].y = ny;
             arr[i].dir = idir;
         }
-        // »ó¾î À§Ä¡ map¿¡ °»½Å
+        // ìƒì–´ ìœ„ì¹˜ mapì— ê°±ì‹ 
         for (int y = 0; y < R; y++)
             for (int x = 0; x < C; x++)
                 map[y][x] = tmp[y][x];
