@@ -1,13 +1,5 @@
-/*
-# Q
-- 스타트 팀과 링크 팀의 능력치의 차이를 최소값은?
-
-# Aglo
-- 2개의 팀으로 나눈다
-- n/2 개의 수와 일치할 때 -> 팀차이 계산
-*/
-
 #define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <vector>
 #include <algorithm>
