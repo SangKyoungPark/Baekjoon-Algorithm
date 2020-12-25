@@ -1,10 +1,5 @@
-/*
-# Q
-- ·Îº¿Ã»¼Ò±â°¡ Ã»¼ÒÇÏ´Â ±¸¿ªÀÇ ¼ö
+#define _CRT_SECURE_NO_WARNINGS
 
-#Algo
-- a,b,c,d ±âÁØ¿¡ ¸ÂÃç¼­ dfsÁøÇà
-*/
 #include <iostream>
 using namespace std;
 
@@ -12,21 +7,21 @@ int n, m;
 int r, c, d;
 int map[60][60]{};
 int cnt;
-// ºÏµ¿³²¼­(ÀüÁø)
+// ë¶ë™ë‚¨ì„œ(ì „ì§„)
 int dx[] = { -1,0,1,0 };
 int dy[] = { 0,1,0,-1 };
 
 void dfs(int x, int y, int dir) {
-	//º®
+	//ë²½
 	if (map[x][y] == 1)	return;
 
-	//ºóÄ­
+	//ë¹ˆì¹¸
 	if (map[x][y] == 0) {
 		map[x][y] = 2;
 		cnt++;
 	}
 
-	// 4 ¹æÇâ °Ë»ç
+	// 4 ë°©í–¥ ê²€ì‚¬
 	for (int k = 0; k < 4; k++) {
 		int nextDir = dir - 1 < 0 ? 3 : dir - 1;
 		int next_y = y + dy[nextDir];
@@ -34,16 +29,16 @@ void dfs(int x, int y, int dir) {
 
 		if (map[next_x][next_y] == 0) {
 			dfs(next_x, next_y, nextDir);
-			// ´ÙÀ½ Ä­À¸·Î ³Ñ¾î°£ °æ¿ì ³ª¸ÓÁö °Ë»ç X
+			// ë‹¤ìŒ ì¹¸ìœ¼ë¡œ ë„˜ì–´ê°„ ê²½ìš° ë‚˜ë¨¸ì§€ ê²€ì‚¬ X
 			return;
 		}
 		else {
-			// Ã»¼Ò¸¦ Çß°Å³ª º®ÀÌ¸é ¹æÇâ¸¸ ¹Ù²Ş
+			// ì²­ì†Œë¥¼ í–ˆê±°ë‚˜ ë²½ì´ë©´ ë°©í–¥ë§Œ ë°”ê¿ˆ
 			dir = nextDir;
 		}
 	}
 
-	// ³× ¹æÇâ ¸ğµÎ Ã»¼ÒÇß°Å³ª º®ÀÌ¸é ¹æÇâÀ» À¯ÁöÇÑÃ¤·Î ÈÄÁø
+	// ë„¤ ë°©í–¥ ëª¨ë‘ ì²­ì†Œí–ˆê±°ë‚˜ ë²½ì´ë©´ ë°©í–¥ì„ ìœ ì§€í•œì±„ë¡œ í›„ì§„
 	// 0 -> 2 / 1-> 3 / 2 -> 0 / 3 -> 1
 	int nextDir = (dir + 2) % 4;
 	dfs(x + dx[nextDir], y + dy[nextDir], dir);
