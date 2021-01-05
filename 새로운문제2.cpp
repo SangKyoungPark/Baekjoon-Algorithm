@@ -34,7 +34,7 @@ int moving() {
 			else if (horse[i].dir == 2)	horse[i].dir = 1;
 			else if (horse[i].dir == 3)	horse[i].dir = 4;
 			else if (horse[i].dir == 4)	horse[i].dir = 3;
-			map[y + dy[horse[i].dir]][x + dx[horse[i].dir]];
+			i--;
 		}
 		//white
 		if (stage[y][x] == 0) {
@@ -56,6 +56,7 @@ int moving() {
 			else if(horse[i].dir == 2)	horse[i].dir = 1;
 			else if (horse[i].dir == 3)	horse[i].dir = 4;
 			else if (horse[i].dir == 4)	horse[i].dir = 3;
+			i--;
 		}
 	}
 
