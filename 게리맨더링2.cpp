@@ -1,70 +1,86 @@
 #define _CRT_SECURE_NO_WARNINGS
 
-#include <iostream>
+#include<iostream>
+#include<algorithm>
+#include<vector>
 using namespace std;
 
+#define INF 987987987
 #define SIZE 25
 
 int n{};
 int map[SIZE][SIZE]{};
-int v[SIZE][SIZE]{};
-int nMin{};
+int nRes{};
 
-void checkBoundary(int y,int x, int d1, int d2) {
-	// boundary check
-	// 1
-	for (int i = 0; i <= d1; i++) {
-		if (y + i < 0 || y + i >= n || x - i < 0 || x - i >= n) break;
-		v[y + i][x - i] = 5;
-	}
-	// 2
-	for (int i = 0; i <= d2; i++) {
-		if (y + i < 0 || y + i >= n || x + i < 0 || x + i >= n) break;
-		v[y + i][x + i] = 5;
-	}
-	// 3
-	for (int i = 0; i <= d2; i++) {
-		if (y + d1 + i < 0 || y + d1 + i >= n || x - d1 + i < 0 || x - d1 + i >= n) break;
-		v[y + d1 + i][x - d1 + i] = 5;
-	}
-	// 4
-	for (int i = 0; i <= d1; i++) {
-		if (y + d2 + i < 0 || y + d2 + i >= n || x + d2 - i < 0 || x + d2 - i >= n) break;
-		v[y + d2 + i][x + d2 - i] = 5;
-	}
-	// fill to number 5
+int solve(int x, int y, int d1, int d2) {
+	vector<int> population[5]{};
 
-	// print
-	printf("after \n");
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			printf("%d ", v[i][j]);
+	//init
+	for (int i = 0; i < 5; i++) {
+		population[i].push_back(0);
+	}
+
+	for (int r = 1; r <= n; r++) {
+		for (int c = 1; c <= n; c++) {
+			//1번 선거구
+			if (r < x + d1 && c <= y && !(r >= x && c >= y - (r - x))) {
+				population[0].at(0) += map[r][c];
+			}
+			//2번 선거구
+			else if (r <= x + d2 && c > y && !(r >= x && c <= y + (r - x))) {
+				population[1].at(0) += map[r][c];
+			}
+			//3번 선거구
+			else if (r >= x + d1 && c < y - d1 + d2 && !(r <= x + d1 + d2 && c >= (y - d1 + d2 - (x + d1 + d2 - r)))) {
+				population[2].at(0) += map[r][c];
+			}
+			//4번 선거구
+			else if (r > x + d2 && c >= y - d1 + d2 && !(r <= x + d1 + d2 && c <= (y - d1 + d2 + (x + d1 + d2 - r)))) {
+				population[3].at(0) += map[r][c];
+			}
+			//5번 선거구
+			else {
+				population[4].at(0) += map[r][c];
+			}
 		}
-		printf("\n");
 	}
+
+	int myMax = -987987987;
+	int myMin = 987987987;
+	for (int i = 0; i < 5; i++) {
+		myMin = min(population[i].at(0), myMin);
+		myMax = max(population[i].at(0), myMax);
+	}
+
+	return myMax - myMin;
+}
+
+void getMin() {
+	int res = INF;
+	for (int x = 1; x <= n - 2; x++) {
+		for (int y = 2; y <= n - 1; y++) {
+			for (int d1 = 1; d1 <= y - 1 && d1 <= n - x - 1; d1++) {
+				for (int d2 = 1; d2 <= n - y && d2 <= n - x - 1; d2++) {
+					res = min(res, solve(x, y, d1, d2));
+				}
+			}
+		}
+	}
+	nRes = res;
 }
 
 int main() {
-	// Input Data
-	scanf("%d", &n);
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
+	//input data
+	scanf("%d",&n);
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= n; j++) {
 			scanf("%d", &map[i][j]);
 		}
 	}
+	//logic
+	getMin();
 
-	// Init
-	nMin = 987987987;
-
-	// Logic
-//	if (d1 >= 1 && d2 >= 1 && 1 <= x
-//		&& y < y + d1 + d2 && y + d1 + d2 <= n
-//		&& 1 <= x - d1 && x - d1 < x && x < x + d2 && x + d2 <= n)
-
-	checkBoundary(1,3,2,2);
-
-	// Result
-	printf("%d\n", nMin);
-
+	//result
+	printf("%d", nRes);
 	return 0;
 }
