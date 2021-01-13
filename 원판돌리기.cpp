@@ -1,10 +1,10 @@
 /*
 # Q
-- ¿øÆÇÀ» T ¹ø È¸Àü½ÃÅ² ÈÄ ¿øÆÇ¿¡ ÀûÈù ¼öÀÇ ÇÕÀº ?
+- ì›íŒì„ T ë²ˆ íšŒì „ì‹œí‚¨ í›„ ì›íŒì— ì íŒ ìˆ˜ì˜ í•©ì€ ?
 # Algo
-- 1. i¹øÂ° È¸ÀüÇÒ ¶§, XiÀÇ ¹è¼öÀÎ ¿øÆÇÀ» di ¹æÇâÀ¸·Î kiÄ­ È¸Àü (di // 0 : ½Ã°è / 1 : ¹İ½Ã°è)
-- 2. ÀÎÁ¢ÇÏ¸é¼­ ¼ö°¡ °°Àº °ÍÀ» ¸ğµÎ Ã£¾Æ¼­ Áö¿ò
-- 3. ¾ø´Â °æ¿ì¿¡´Â ¿øÆÇ¿¡ ÀûÈù ¼öÀÇ Æò±ÕÀ» ±¸ÇÔ, Æò±Õº¸´Ù Å« ¼ö¿¡¼­ 1À» »©°í, ÀÛÀº ¼ö¿¡´Â 1À» ´õÇÔ
+- 1. ië²ˆì§¸ íšŒì „í•  ë•Œ, Xiì˜ ë°°ìˆ˜ì¸ ì›íŒì„ di ë°©í–¥ìœ¼ë¡œ kiì¹¸ íšŒì „ (di // 0 : ì‹œê³„ / 1 : ë°˜ì‹œê³„)
+- 2. ì¸ì ‘í•˜ë©´ì„œ ìˆ˜ê°€ ê°™ì€ ê²ƒì„ ëª¨ë‘ ì°¾ì•„ì„œ ì§€ì›€
+- 3. ì—†ëŠ” ê²½ìš°ì—ëŠ” ì›íŒì— ì íŒ ìˆ˜ì˜ í‰ê· ì„ êµ¬í•¨, í‰ê· ë³´ë‹¤ í° ìˆ˜ì—ì„œ 1ì„ ë¹¼ê³ , ì‘ì€ ìˆ˜ì—ëŠ” 1ì„ ë”í•¨
 */
 
 #define _CRT_SECURE_NO_WARNINGS
@@ -13,116 +13,129 @@
 #include <vector>
 using namespace std;
 
-#define SIZE 50
+#define SIZE 55
 
 int n{}, m{}, t{};
 int pan[SIZE][SIZE]{};
 int nRes{};
 
+int dy[] = { 0,0,-1,1 };
+int dx[] = { -1,1,0,0 };
+
 void rotate(int x, int d, int k) {
-	// ½Ã°è
+	// ì‹œê³„
 	if (d == 0) {
-		for (int i = 0; i < k; i++) {
-			int data = pan[x][m-1];
-			for (int j = m - 1; j >= 0; j--) {
-				pan[x][j] = pan[x][j-1];
+		for (int i = 1; i <= k; i++) {
+			int data = pan[x][m];
+			for (int j = m; j > 1; j--) {
+				pan[x][j] = pan[x][j - 1];
 			}
-			pan[x][0] = data;
+			pan[x][1] = data;
 		}
 	}
-	// ¹İ½Ã°è
+	// ë°˜ì‹œê³„
 	else {
-		for (int i = 0; i < k; i++) {
-			int data = pan[x][0];
-			for (int j = 0; j < m - 1;j++) {
-				pan[x][j] = pan[x][j+1];
+		for (int i = 1; i <= k; i++) {
+			int data = pan[x][1];
+			for (int j = 1; j < m;j++) {
+				pan[x][j] = pan[x][j + 1];
 			}
-			pan[x][m - 1] = data;
+			pan[x][m] = data;
 		}
 	}
 }
-void  adjacent(int x) {
-	int temp[SIZE][SIZE]{};
-	//copy
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			temp[i][j] = pan[i][j];
-		}
-	}
+
+void  adjacent() {
+	// ìƒí•˜ì¢Œìš° ê²€ìƒ‰ ì‹œ, ì¼ì¹˜í•˜ë©´ v ë°°ì—´ì— -1 í‘œì‹œ
+	int v[SIZE][SIZE]{};
 	bool flag = false;
 
-	// ÀÎÁ¢ÇÑ °ÍÀ» Ã£±â
-	for (int j = 0; j < n; j++) {
-		for (int i = 0;i < m; i++) {
-			if (i - 1 >= 0) {
-				if (pan[j][i] == pan[x][i - 1]) {
-					temp[j][i - 1] = -1;
-					flag = true;
-				}
-			}
-			if (i + 1 < n) {
-				if (pan[j][i] == pan[x][i + 1]) {
-					temp[j][i + 1] = -1;
-					flag = true;
-				}
-			}
-			if (j + 1 < n) {
-				if (pan[j][i] == pan[x + 1][i] && x + 1 < n) {
-					temp[j + 1][i] = -1;
-					flag = true;
-				}
-			}
-			if (j - 1 >= 0) {
-				if (pan[j][i] == pan[j - 1][i]) {
-					temp[j - 1][i] = -1;
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			v[i][j] = pan[i][j];
+		}
+	}
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			for (int k = 0; k < 4; k++) {
+				int y = i + dy[k];
+				int x = j + dx[k];
+				if (y < 1 || x < 1 || y > n || x > m)	continue;
+				if (pan[y][x] == 0) continue;
+				if (pan[i][j] == pan[y][x]) {
+					v[y][x] = 0;
+					v[i][j] = 0;
 					flag = true;
 				}
 			}
 		}
+		if (pan[i][1] != 0) {
+			if (pan[i][1] == pan[i][m]) {
+				v[i][1] = 0;
+				v[i][m] = 0;
+				flag = true;
+			}
+		}
 	}
-	// ÀÎÁ¢ÇÑ °ÍÀÌ ¾øÀ» °æ¿ì
+
 	if (!flag) {
-		int sum = 0;
-		int cnt = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				if (pan[i][j] != -1) {
-					sum += pan[i][j];
+		float avg = 0.0f;
+		float sum = 0.0f;
+		float cnt = 0.0f;
+
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				if (v[i][j] != 0) {
+					sum += v[i][j];
 					cnt++;
 				}
 			}
 		}
-		int evg = sum / cnt;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				if (pan[i][j] != -1) {
-					if (pan[i][j] > evg)	pan[i][j]++;
-					else	pan[i][j]--;
+		avg = sum / cnt;
+		for (int i = 1; i <= n; i++) {
+			for (int j = 1; j <= m; j++) {
+				if (v[i][j] != 0) {
+					if (v[i][j] > avg) v[i][j]--;
+					else if (v[i][j] < avg) v[i][j]++;
 				}
 			}
 		}
 	}
 	// update
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			pan[i][j] = temp[i][j];
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			pan[i][j] = v[i][j];
 		}
 	}
 }
 
-void solve(int x, int d, int k) {
-	
-	// È¸Àü
-	int i = 1;
-	while (n > i * x) {
-		rotate(x * i, d, k);
-		i++;
+int main() {
+	int x{}, d{}, k{};
+
+	//input
+	scanf("%d %d %d", &n, &m, &t);
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
+			scanf("%d", &pan[i][j]);
+		}
 	}
-	adjacent(x * i);
-	
+	for (int i = 1; i <= t; i++) {
+		scanf("%d %d %d", &x, &d, &k);
+		//logic
+		//xì˜ ë°°ìˆ˜ì¸ ì¹¸ì„ ëŒë¦¼
+		int r = 1;
+		while (x * r <= n) {
+			rotate(x * r, d, k);
+			r++;
+		}
+		adjacent();
+	}
+
+	//result
 	int sum = 0;
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
+	for (int i = 1; i <= n; i++) {
+		for (int j = 1; j <= m; j++) {
 			if (pan[i][j] != -1) {
 				sum += pan[i][j];
 			}
@@ -130,30 +143,8 @@ void solve(int x, int d, int k) {
 	}
 	if (sum < 0)	nRes = -1;
 	else	nRes = sum;
-}
 
-int main() {
-	int x{}, d{}, k{};
-	
-	//input
-	scanf("%d %d %d", &n, &m, &t);
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			scanf("%d", &pan[i][j]);
-		}
-	}
-	for (int i = 0; i < t; i++) {
-		scanf("%d %d %d", &x, &d, &k);
-		//logic
-		solve(x-1, d, k);
-	}
-	//result
 	printf("%d\n", nRes);
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < m; j++) {
-			printf("%d ", pan[i][j]);
-		}
-		printf("\n");
-	}
+
 	return 0;
 }
