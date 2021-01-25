@@ -1,3 +1,5 @@
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 
 int n;
@@ -22,11 +24,11 @@ int main() {
     scanf("%d %d", &b, &c);
 
     //logic
-    myMin += n; // °¢ ¹æ¿¡ 1¸íÀº ¹«Á¶°Ç ÀÖ±â ‹š¹®¿¡ ÇÊ¿äÇÑ ÃÑ°¨µ¶°ü¼ö¿Í °°À½
+    myMin += n; // ê° ë°©ì— 1ëª…ì€ ë¬´ì¡°ê±´ ìžˆê¸° ë•Œë¬¸ì— í•„ìš”í•œ ì´ê°ë…ê´€ìˆ˜ì™€ ê°™ìŒ
     for (int i = 0; i < n; i++) {
         int cnt = 0;
         arr[i] -= b;
-        cnt = func(i);   // arr[i]¿¡ ÇÊ¿äÇÑ ÃÑ°¨µ¶°ü 1 + ºÎ°¨µ¶°ü ¼ö return
+        cnt = func(i);   // arr[i]ì— í•„ìš”í•œ ì´ê°ë…ê´€ 1 + ë¶€ê°ë…ê´€ ìˆ˜ return
         myMin += cnt;
     }
 
