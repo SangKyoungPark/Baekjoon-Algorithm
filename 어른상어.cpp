@@ -3,155 +3,124 @@
 #include <iostream>
 using namespace std;
 
-#define SIZE 20
+#define SIZE 21
 
-struct SHARK {
-	int y{};
-	int x{};
-	int dir{};
-	int order[5][5]{};
-	bool isDead;
+struct INFO {
+    int x, y, d, die;
 };
 
 int n{}, m{}, k{};
-int res{};
-int map[SIZE][SIZE]{};
+int arr[SIZE][SIZE]{};
+int num;
+int smell[SIZE][SIZE][3]{};
+int visit[SIZE * SIZE]{};
+int nRes = -1;  // 1: ìƒì–´ë²ˆí˜¸ 2: ëƒ„ìƒˆë‚¨ì€ì‹œê°„
 
-pair <int, int> smell[SIZE][SIZE]{};
-SHARK shark[SIZE * SIZE]{};
+int dx[] = { 0,-1,1,0,0 };
+int dy[] = { 0,0,0,-1,1 };
+int shark_dir[SIZE * SIZE][5][5]{}; // 1: ìœ„ 2: ì•„ë˜ 3: ì¢Œ 4: ìš°
 
-int dy[] = { 0,-1,1,0,0 };
-int dx[] = { 0,0,0,-1,1 };
+INFO shark[SIZE * SIZE]{};
 
-int main(void){
-	//input data
-	scanf("%d %d %d", &n, &m, &k);
-	
-	for (int i = 0; i < n; i++) {
-		for (int j = 0; j < n; j++) {
-			scanf("%d", &map[i][j]);
-			// shark info
-			if (map[i][j]!=0) {
-				shark[map[i][j]].y = i;
-				shark[map[i][j]].x = j;
-				shark[map[i][j]].isDead = false;
-				smell[i][j].first = map[i][j];
-				smell[i][j].first = k;
-			}
-		}
-	}
-	for (int i = 1; i <= m; i++) {
-		scanf("%d", &shark[i].dir);
-	}
+void update() {
+    for (int i = 1; i <= m; i++) {
+        if (shark[i].die == 1) continue;
+        for (int j = i; j <= m; j++) {
+            if (i == j) continue;
+            if (shark[i].x == shark[j].x && shark[i].y == shark[j].y) {
+                if (i < j) shark[j].die = 1;
+            }
+        }
+    }
+    for (int i = 1; i <= m; i++) {
+        if (shark[i].die != 1) {
+            smell[shark[i].x][shark[i].y][1] = i;
+            smell[shark[i].x][shark[i].y][2] = k;
+        }
+    }
+}
 
-	for (int i = 1; i <= m; i++) {
-		for (int j = 1; j <= 4; j++) {
-			for (int l = 1; l <= 4; l++) {
-				scanf("%d", &shark[i].order[j][l]);
-			}
-		}
-	}
+void solve(int num) {
+    int x = shark[num].x;
+    int y = shark[num].y;
+    int d = shark[num].d;
+    bool flag = false;
 
-	//init
-	res = 1;
+    for (int i = 1; i <= 4; i++) {
+        int kx = x + dx[shark_dir[num][d][i]];
+        int ky = y + dy[shark_dir[num][d][i]];
+        if (kx < 0 || kx >= n || ky < 0 || ky >= n) continue;
+        if (smell[kx][ky][2] == 0) {
+            flag = true;
+            shark[num].x = kx, shark[num].y = ky;
+            shark[num].d = shark_dir[num][d][i];
+            break;
+        }
+    }
 
-	//logic
-	while (res <= 1000) {
-		//  move
-		for (int i = 1; i <= m; i++) {
-			if (shark[i].isDead)	continue;
+    if (!flag) {
+        for (int i = 1; i <= 4; i++) {
+            int kx = x + dx[shark_dir[num][d][i]];
+            int ky = y + dy[shark_dir[num][d][i]];
+            if (kx < 0 || kx >= n || ky < 0 || ky >= n) continue;
+            if (smell[kx][ky][1] == num) {
+                shark[num].x = kx, shark[num].y = ky;
+                shark[num].d = shark_dir[num][d][i]; // ì´ë™í•  ê³³ì´ ì—†ì„ë•Œ ë°©í–¥ì„ ì´ë ‡ê²Œ ì²˜ë¦¬
+                break;
+            }
+        }
+    }
+}
 
-			bool isGo = false;
-			for (int d = 1; d <= 4; d++) {
-				//new stage
-				int y = shark[i].y + dy[shark[i].order[shark[i].dir][d]];
-				int x = shark[i].x + dx[shark[i].order[shark[i].dir][d]];
+int main() {
+    //input data
+    scanf("%d %d %d", &n, &m, &k);
 
-				if (y < 0 || x < 0 || y >= n || x >= n || smell[y][x].first!= 0)	continue;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &arr[i][j]);
+            if (arr[i][j] != 0) {
+                shark[arr[i][j]].x = i, shark[arr[i][j]].y = j;
+                smell[i][j][1] = arr[i][j], smell[i][j][2] = k;
+            }
+        }
+    }
+    for (int i = 1; i <= m; i++) {
+        scanf("%d", &shark[i].d);
+    }
+    for (int e = 1; e <= m; e++) {
+        for (int i = 1; i <= 4; i++) {
+            for (int j = 1; j <= 4; j++) {
+                scanf("%d", &shark_dir[e][i][j]);
+            }
+        }
+    }
 
-				isGo = true;
+    //logic
+    for (int t = 0; t < 1001; t++) {
+        //counting shark
+        int nCnt = 0;
+        for (int i = 2; i <= m; i++) {
+            if (shark[i].die == 1) nCnt++;
+        }
+        if (nCnt == m - 1) {
+            nRes = t;
+            break;
+        }
+        //moving shark
+        for (int j = 1; j <= m; j++) {
+            if (shark[j].die == 1) continue;
+            solve(j);
+        }
 
-				//»ó¾î°¡ ÀÌµ¿ÇÒ ¶§
-				if (map[y][x] != 0) {
-					if (map[y][x] < i) {
-						shark[i].isDead = true;
-						map[shark[i].y][shark[i].x] = 0;
-					}
-					else {
-						shark[map[y][x]].isDead = true;
-
-						map[shark[i].y][shark[i].x] = 0;
-						shark[i].y = y;
-						shark[i].x = x;
-						shark[i].dir = shark[i].order[shark[i].dir][d];
-						map[y][x] = i;
-					}
-				}
-				else {
-					map[shark[i].y][shark[i].x] = 0;
-					shark[i].y = y;
-					shark[i].x = x;
-					shark[i].dir = shark[i].order[shark[i].dir][d];
-					map[y][x] = i;
-				}
-				break;
-			}
-			// »ó¾î°¡ ÀÌµ¿ÇÏÁö ¾ÊÀ» ¶§
-			if (!isGo) {
-				for (int d = 1; d <= 4; d++) {
-					int y = shark[i].y + dy[shark[i].order[shark[i].dir][d]];
-					int x = shark[i].x + dx[shark[i].order[shark[i].dir][d]];
-
-					if (y < 0 || x < 0 || y >= n || x >= n)	continue;
-
-					if (smell[y][x].first == i) {
-						map[shark[i].y][shark[i].x] = 0;
-						shark[i].y = y;
-						shark[i].x = x;
-						shark[i].dir = shark[i].order[shark[i].dir][d];
-						map[y][x] = i;
-						break;
-					}
-				}
-			}
-		}
-		//move end
-
-		//smell remove
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (smell[i][j].first != 0) {
-					smell[i][j].second--;
-					if (smell[i][j].second == 0)	smell[i][j].first = 0;
-				}
-			}
-		}
-		//smell spread
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
-				if (map[i][j] != 0) {
-					smell[i][j].first = map[i][j];
-					smell[i][j].second = k;
-				}
-			}
-		}
-
-		// 1¹ø »ó¾î¸¸ ³²¾Ò´ÂÁö?
-		bool isEnd = true;
-		for (int i = 2; i <= m; i++) {
-			if (shark[i].isDead == false) {
-				isEnd = false;
-				break;
-			}
-		}
-		if (isEnd) {
-			printf("%d", res);
-			return 0;
-		}
-		else {
-			res++;
-		}
-	}
-	printf("-1");
-	return 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (smell[i][j][2] > 0) smell[i][j][2]--;
+                if (smell[i][j][2] == 0) smell[i][j][1] = 0;
+            }
+        }
+        update();
+    }
+    printf("%d\n", nRes);
+    return 0;
 }
