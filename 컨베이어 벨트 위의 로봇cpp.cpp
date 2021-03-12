@@ -69,7 +69,7 @@ int main() {
 	/* 
 	1. rotate
 	2. isMove()  O -> move
-				 X -> maintain
+		     X -> maintain
 	3. robot X -> put on belt -> belt[0]
 	4. durability >= k // print(time)
 	*/
