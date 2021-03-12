@@ -1,4 +1,4 @@
-// 2020 ÇÏ¹Ý±â °øÃ¤ Coding Test Problem
+// 2020 Samsung Electronics Coding Test Problem
 
 #define _CRT_SECURE_NO_WARNINGS
 
@@ -11,8 +11,8 @@ using namespace std;
 int n{}, k{};
 int step{};
 
-deque <int> dura{}; // ³»±¸¼º
-deque <bool> belt{}; // º§Æ®
+deque <int> dura{}; // Â³Â»Â±Â¸Â¼Âº
+deque <bool> belt{}; // ÂºÂ§Ã†Â®
 
 void rotate() {
 	belt.push_front(belt.back());
