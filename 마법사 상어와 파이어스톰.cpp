@@ -1,16 +1,15 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <iostream>
-#include <algorithm>
+#include <cstring>
+#define MAX 64
 using namespace std;
 
-#define SIZE 64
-
 int N, Q;
-int map[SIZE][SIZE]{};
-int temp[SIZE][SIZE]{};
-bool v[SIZE][SIZE]{};
-bool c[SIZE][SIZE]{};
+int map[MAX][MAX]{};
+int temp[MAX][MAX]{};
+bool c[MAX][MAX]{};
+bool v[MAX][MAX]{};
 int dy[] = { -1,1,0,0 };
 int dx[] = { 0,0,-1,1 };
 
@@ -27,7 +26,7 @@ int dfs(int y, int x) {
 	return ret;
 }
 
-// ∞°¿Â ≈´ µ¢æÓ∏Æ √£±‚ - DFS
+// Í∞ÄÏû• ÌÅ∞ Îç©Ïñ¥Î¶¨ Ï∞æÍ∏∞ - DFS
 int getBiggest() {
 	int ret = 0;
 	for (int i = 0; i < N; i++)
@@ -37,7 +36,7 @@ int getBiggest() {
 	return ret;
 }
 
-// æÛ¿Ω «’ π›»Ø
+// ÏñºÏùå Ìï© Î∞òÌôò
 int getSum() {
 	int ret = 0;
 	for (int i = 0; i < N; i++)
@@ -46,7 +45,7 @@ int getSum() {
 	return ret;
 }
 
-// ∞›¿⁄ Ω√∞ËπÊ«‚ »∏¿¸
+// Í≤©Ïûê ÏãúÍ≥ÑÎ∞©Ìñ• ÌöåÏ†Ñ
 void rotate(int y, int x, int L) {
 	for (int i = 0; i < L; i++) {
 		for (int j = 0; j < L; j++) {
@@ -61,18 +60,18 @@ void rotate(int y, int x, int L) {
 	}
 }
 
-void rotateMap(int L) {
+void solve(int L) {
 	L = (1 << L);
-	// ∏µÁ ∞›¿⁄ø° ¥Î«— »∏¿¸
+
+	// Î™®Îì† Í≤©ÏûêÏóê ÎåÄÌïú ÌöåÏ†Ñ
 	for (int i = 0; i < N; i += L) {
 		for (int j = 0; j < N; j += L) {
 			rotate(i, j, L);
 		}
 	}
-}
-
-void melting() {
+	// ÏñºÏùå ÎÖπÏûÑ
 	memset(c, false, sizeof(c));
+
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) {
 			if (map[i][j] == 0) continue;
@@ -102,16 +101,15 @@ int main() {
 	N = (1 << N);
 	for (int i = 0; i < N; i++) {
 		for (int j = 0; j < N; j++) {
-			scanf("%d",&map[i][j]);
+			scanf("%d", &map[i][j]);
 		}
 	}
 
 	//logic
-	while (Q--) {
+	for(int i=0; i<Q; i++) {
 		int L{};
-		scanf("%d",&L);
-		rotateMap(L);
-		melting();
+		scanf("%d", &L);
+		solve(L);
 	}
 
 	//result
