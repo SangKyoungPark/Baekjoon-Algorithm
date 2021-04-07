@@ -8,13 +8,17 @@ struct point {
 	int y;
 	int x;
 };
+
 int INF = 987987987;
-char map[20][20];
+
+int n{}, m{};
+char map[20][20]{};
+int myMin = INF;
+
+point R{}, B{}, O{};
+
 int dx[] = { 0,0,-1,1 };
 int dy[] = { -1,1,0,0 };
-int n, m;
-int myMin = INF;
-point R, B, O;
 
 int solve(point r, point b, int cnt, int dir) {
 	//escape condition
