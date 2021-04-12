@@ -3,53 +3,88 @@
 #include <queue>
 using namespace std;
 
-int n, k, m;
-int x, y, z, d, ans;
-int a[120][120], t[120];
-char c[120];
-const int dx[] = { 0, 0, 1, -1 }, dy[] = { 1, -1, 0, 0 };
-const int L[] = { 3, 2, 0, 1 }, D[] = { 2, 3, 1, 0 };
-queue<pair<int, int>> q;
+struct S_POS {
+    int y{};
+    int x{};
+    int dir{};
+};
 
-void solve() {
-    //¹ì ÁÂÇ¥ Å¥¿¡ »ðÀÔ
-    a[0][0] = 2;
-    q.push({ 0, 0 });
+int n{}, k{}, l{};
+int map[120][120]{};
+int t[120]{};
+char c[120]{};
+int nRes{};
 
-    //logic
-    while (true) {
-        x += dx[d], y += dy[d];
-        ans++;
-        if (x < 0 || x >= n || y < 0 || y >= n || a[x][y] == 2) {
-            printf("%d\n", ans);
-            return;
-        }
-        if (a[x][y] == 0) {
-            int nx = q.front().first, ny = q.front().second; q.pop();
-            a[nx][ny] = 0;
-        }
-        a[x][y] = 2;
-        q.push({ x, y });
+// 서 - 북 - 동 - 남
+int dy[] = { 0, -1 ,0 ,1 };
+int dx[] = { -1, 0 ,1, 0 };
 
-        if (ans == t[z]) {
-            if (c[z] == 'L') d = L[d];
-            else d = D[d];
-            z++;
+
+int bfs() {
+    queue <S_POS> Q{};
+    Q.push({ 1,1, 2 });
+
+    int time = 0;
+    int idx = 0;
+    map[1][1] = 2;
+
+    int y = Q.front().y;
+    int x = Q.front().x;
+    int d = Q.front().dir;
+
+    while(true){
+        y += dy[d];
+        x += dx[d];
+
+        time++;
+        if (y < 1 || x < 1 || y > n || x > n || map[y][x] == 2) {
+            return time;
         }
+
+        if (map[y][x] == 0) {
+            int ty = Q.front().y;
+            int tx = Q.front().x;
+            map[ty][tx] = 0;
+            Q.pop();
+        }
+        if (time == t[idx]) {
+            if (c[idx] == 'D') {
+                d++;
+                if (d > 3) {
+                    d = 0;
+                }
+            }
+            else {
+                d--;
+                if (d < 0) {
+                    d = 3;
+                }
+            }
+            idx++;
+        }
+        Q.push({ y,x,d });
+        map[y][x] = 2;
     }
 }
 
 int main() {
-    scanf("%d %d", &n, &k);
+    //input data
+    scanf("%d", &n);
+    scanf("%d", &k);
     for (int i = 0; i < k; i++) {
-        int u, v;
-        scanf("%d %d", &u, &v);
-        a[u - 1][v - 1] = 1;
+        int y, x;
+        scanf("%d %d", &y, &x);
+        map[y][x] = 1;
     }
-    scanf("%d", &m);
-    for (int i = 0; i < m; i++) {
+    scanf("%d", &l);
+    for (int i = 0; i < l; i++) {
         scanf("%d %c", &t[i], &c[i]);
     }
-    solve();
+
+    //logic
+    int nRes = bfs();
+
+    //result
+    printf("%d\n", nRes);
     return 0;
 }
